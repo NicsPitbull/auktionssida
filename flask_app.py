@@ -32,13 +32,21 @@ def skapa_app():
     # 1. Skapa Flask-appen
     app = Flask(__name__)
 
+    # >>> ÄNDRING HÄR: Hämta den absoluta sökvägen till projektmappen
+    # __file__ är sökvägen till flask_app.py. Vi tar katalogen (dirname).
+    project_dir = os.path.abspath(os.path.dirname(__file__))
+    
     # ============================================================
     # 2. KONFIGURATION (Applikationsinställningar)
     # ============================================================
     # SECRET_KEY: Nödvändig för att skydda session cookies (inloggning). BYT DENNA I PRODUKTION!
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'din_superhemliga_nyckel')
+    
     # SQLALCHEMY_DATABASE_URI: Anger vilken databas vi ska använda (en SQLite-fil).
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///blgeestates.db')
+    # >>> KORRIGERAD SÖKVÄG FÖR DEPLOYMENT: Använder ABSOLUT sökväg till databasfilen
+    db_path = os.path.join(project_dir, 'blgeestates.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', f'sqlite:///{db_path}')
+    
     # SQLALCHEMY_TRACK_MODIFICATIONS: Stängs av för att spara resurser (bäst praxis).
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
