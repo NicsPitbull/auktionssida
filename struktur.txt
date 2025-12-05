@@ -1,0 +1,22 @@
+/vscodefastighetsmaklare               # Applikationens rotkatalog.
+│
+├── flask_app.py                 # HUVUDFIL - Startar appen
+├── database.py                  # 🗄DATABASKONFIGURATION
+│
+├── models/                      # MODELLER (Databastabeller)
+│   ├── bostad.py               # Bostad-tabellen
+│
+├── dbrepositories/                #  REPOSITORIES (Databasåtkomst)
+│   ├── bostad_repository.py    # CRUD för bostäder
+│
+├── myblueprints/                  #BLUEPRINTS (URL-hantering) 
+│   ├── bostader/
+│   │   ├── __init__.py
+│   │   ├── bostader_routes.py  # URL:er för bostäder, vår kontroller
+│   │   └── templates/          # HTML för bostäder, våra vyer
+│   │       └──bostader_lista.html
+│   │       └──bostad_detalj.html
+│
+└── templates/
+    └── home.html               #start sidan
+    └── base.html               #mallen alla templates/vyer ärver ifrån

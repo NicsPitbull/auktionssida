@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Bids - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1><i class="fas fa-hand-paper"></i> Manage Bids</h1>
+            <p class="text-muted">View and manage all bids in the system.</p>
+        </div>
+    </div>
+
+    {% if bids %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Auction</th>
+                                    <th>Bidder</th>
+                                    <th>Amount</th>
+                                    <th>Bid Time</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for bid in bids %}
+                                <tr>
+                                    <td>{{ bid.id }}</td>
+                                    <td>
+                                        <a href="{{ url_for('auctions_bp.auction_detail', auction_id=bid.auction.id) }}" target="_blank">
+                                            {{ bid.auction.title }}
+                                        </a>
+                                        <br><small class="text-muted">{{ bid.auction.category }}</small>
+                                    </td>
+                                    <td>
+                                        {{ bid.user.first_name }} {{ bid.user.last_name }}
+                                        <br><small class="text-muted">{{ bid.user.email }}</small>
+                                    </td>
+                                    <td>
+                                        <strong>${{ "%.2f"|format(bid.amount) }}</strong>
+                                        {% if bid.amount == bid.auction.current_bid %}
+                                            <br><span class="badge badge-success">Highest</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ bid.created_at.strftime('%Y-%m-%d') }}<br>
+                                        <small>{{ bid.created_at.strftime('%H:%M:%S') }}</small>
+                                    </td>
+                                    <td>
+                                        {% if bid.auction.status == 'active' %}
+                                            <span class="badge badge-success">Active</span>
+                                        {% elif bid.auction.status == 'ended' %}
+                                            {% if bid.amount == bid.auction.current_bid %}
+                                                <span class="badge badge-warning">Winner</span>
+                                            {% else %}
+                                                <span class="badge badge-secondary">Outbid</span>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="badge badge-info">{{ bid.auction.status.title() }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" 
+                                                onclick="confirmDeleteBid({{ bid.id }}, '{{ bid.auction.title }}', {{ bid.amount }})" title="Delete Bid">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <h4><i class="fas fa-info-circle"></i> No Bids Found</h4>
+                <p>There are no bids in the system yet.</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Delete Bid Confirmation Modal -->
+<div class="modal fade" id="deleteBidModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Bid Deletion</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this bid?</p>
+                <div class="alert alert-warning">
+                    <strong>Auction:</strong> <span id="bidAuctionTitle"></span><br>
+                    <strong>Bid Amount:</strong> $<span id="bidAmount"></span>
+                </div>
+                <p class="text-danger"><i class="fas fa-exclamation-triangle"></i> This action cannot be undone and may affect the auction's current highest bid.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form id="deleteBidForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Delete Bid
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDeleteBid(bidId, auctionTitle, bidAmount) {
+    document.getElementById('bidAuctionTitle').textContent = auctionTitle;
+    document.getElementById('bidAmount').textContent = bidAmount.toFixed(2);
+    document.getElementById('deleteBidForm').action = '/admin/bids/' + bidId + '/delete';
+    $('#deleteBidModal').modal('show');
+}
+</script>
+{% endblock %}

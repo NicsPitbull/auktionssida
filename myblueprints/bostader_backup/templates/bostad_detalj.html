@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block titel %}{{ bostad.adress }}{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <a href="{{ url_for('bostader_bp.lista_bostader') }}" class="btn btn-link mb-3">&larr; Tillbaka till listan</a>
+
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="card-title mb-0">{{ bostad.adress }}</h1>
+                    <p class="mb-0 fs-5">{{ bostad.stad }}</p>
+                </div>
+                
+                <div class="card-body">
+                    <h2 class="h4 border-bottom pb-2 mb-3">Fakta</h2>
+                    <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item"><strong>Pris:</strong> <span class="text-danger fw-bold">{{ bostad.pris }}</span></li>
+                        <li class="list-group-item"><strong>Rum:</strong> {{ bostad.rum }}</li>
+                        <li class="list-group-item"><strong>Boarea:</strong> {{ bostad.yta }} kvm</li>
+                    </ul>
+
+                    <h2 class="h4 border-bottom pb-2 mb-3">Beskrivning</h2>
+                    <p class="card-text">{{ bostad.beskrivning }}</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

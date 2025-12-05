@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block titel %}{{ titel }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="display-4 mb-4">Kontakta Oss</h1>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                <i class="fas fa-envelope text-primary me-2"></i>E-post
+                            </h3>
+                            <p class="card-text">
+                                <strong>Allmänna frågor:</strong><br>
+                                <a href="mailto:info@auctionhub.se">info@auctionhub.se</a>
+                            </p>
+                            <p class="card-text">
+                                <strong>Kundsupport:</strong><br>
+                                <a href="mailto:support@auctionhub.se">support@auctionhub.se</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                <i class="fas fa-phone text-primary me-2"></i>Telefon
+                            </h3>
+                            <p class="card-text">
+                                <strong>Kundsupport:</strong><br>
+                                <a href="tel:+46812345678">08-123 45 678</a>
+                            </p>
+                            <p class="card-text">
+                                <strong>Öppettider:</strong><br>
+                                Måndag - Fredag: 09:00 - 17:00<br>
+                                Lördag: 10:00 - 15:00
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <i class="fas fa-map-marker-alt text-primary me-2"></i>Besöksadress
+                    </h3>
+                    <p class="card-text">
+                        AuctionHub AB<br>
+                        Auktionsgatan 123<br>
+                        111 22 Stockholm<br>
+                        Sverige
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">Skicka ett meddelande</h3>
+                    <form>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Namn</label>
+                            <input type="text" class="form-control" id="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">E-postadress</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Rubrik</label>
+                            <input type="text" class="form-control" id="subject" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Meddelande</label>
+                            <textarea class="form-control" id="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane me-2"></i>Skicka Meddelande
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

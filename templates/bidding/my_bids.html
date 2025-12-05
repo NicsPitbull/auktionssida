@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}My Bids{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">
+                <i class="fas fa-gavel"></i> My Bidding History
+            </h1>
+            
+            {% if auction_bids %}
+            <div class="row">
+                {% for auction_id, data in auction_bids.items() %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">{{ data.auction.title }}</h6>
+                            {% if data.is_winning %}
+                            <span class="badge badge-success">
+                                <i class="fas fa-crown"></i> Winning
+                            </span>
+                            {% elif data.auction.is_ended %}
+                            <span class="badge badge-secondary">Ended</span>
+                            {% elif data.auction.is_ongoing %}
+                            <span class="badge badge-warning">Outbid</span>
+                            {% else %}
+                            <span class="badge badge-info">Upcoming</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <strong>My Highest Bid:</strong>
+                                <div class="h5 text-primary">{{ "%.0f"|format(data.user_highest_bid.amount) }} SEK</div>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <strong>Current Highest:</strong>
+                                <div class="h6 {% if data.is_winning %}text-success{% else %}text-danger{% endif %}">
+                                    {{ "%.0f"|format(data.current_highest) }} SEK
+                                </div>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <strong>My Bids:</strong> {{ data.bid_count }}
+                            </div>
+                            
+                            <div class="mb-2">
+                                <strong>Category:</strong> {{ data.auction.category }}
+                            </div>
+                            
+                            {% if data.auction.is_ongoing %}
+                            <div class="mb-2">
+                                <strong>Time Left:</strong>
+                                <small class="text-muted">
+                                    {{ data.auction.time_left.days }}d {{ (data.auction.time_left.seconds // 3600) }}h {{ ((data.auction.time_left.seconds % 3600) // 60) }}m
+                                </small>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="mb-3">
+                                <strong>Last Bid:</strong>
+                                <small class="text-muted">{{ data.user_highest_bid.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <a href="{{ url_for('auctions_bp.auction_detail', auction_id=data.auction.id) }}" 
+                               class="btn btn-primary btn-sm">
+                                View Auction
+                            </a>
+                            
+                            {% if data.auction.is_ongoing and not data.is_winning %}
+                            <a href="{{ url_for('auctions_bp.auction_detail', auction_id=data.auction.id) }}#bid-form" 
+                               class="btn btn-success btn-sm">
+                                Bid Again
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-gavel fa-3x text-muted mb-3"></i>
+                <h4>No Bids Yet</h4>
+                <p class="text-muted">You haven't placed any bids yet. Browse auctions to start bidding!</p>
+                <a href="{{ url_for('auctions_bp.browse_auctions') }}" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Browse Auctions
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

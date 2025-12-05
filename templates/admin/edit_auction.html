@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Auction - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-edit"></i> Edit Auction: {{ auction.title }}</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="title">Auction Title *</label>
+                                    <input type="text" class="form-control" id="title" name="title" required
+                                           value="{{ auction.title }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="category">Category *</label>
+                                    <select class="form-control" id="category" name="category" required>
+                                        <option value="electronics" {% if auction.category == 'electronics' %}selected{% endif %}>Electronics</option>
+                                        <option value="art" {% if auction.category == 'art' %}selected{% endif %}>Art & Collectibles</option>
+                                        <option value="jewelry" {% if auction.category == 'jewelry' %}selected{% endif %}>Jewelry</option>
+                                        <option value="furniture" {% if auction.category == 'furniture' %}selected{% endif %}>Furniture</option>
+                                        <option value="vehicles" {% if auction.category == 'vehicles' %}selected{% endif %}>Vehicles</option>
+                                        <option value="books" {% if auction.category == 'books' %}selected{% endif %}>Books</option>
+                                        <option value="sports" {% if auction.category == 'sports' %}selected{% endif %}>Sports & Recreation</option>
+                                        <option value="other" {% if auction.category == 'other' %}selected{% endif %}>Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description *</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" required>{{ auction.description }}</textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="starting_bid">Starting Bid ($)</label>
+                                    {% if auction.bids %}
+                                        <input type="number" class="form-control" id="starting_bid" name="starting_bid" 
+                                               step="0.01" value="{{ auction.starting_bid }}" readonly>
+                                        <small class="form-text text-muted">
+                                            <i class="fas fa-lock"></i> Cannot change starting bid after bids have been placed
+                                        </small>
+                                    {% else %}
+                                        <input type="number" class="form-control" id="starting_bid" name="starting_bid" 
+                                               step="0.01" min="0.01" value="{{ auction.starting_bid }}">
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="status">Status</label>
+                                    <select class="form-control" id="status" name="status">
+                                        <option value="upcoming" {% if auction.status == 'upcoming' %}selected{% endif %}>Upcoming</option>
+                                        <option value="active" {% if auction.status == 'active' %}selected{% endif %}>Active</option>
+                                        <option value="ended" {% if auction.status == 'ended' %}selected{% endif %}>Ended</option>
+                                        <option value="cancelled" {% if auction.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Auction Info -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="alert alert-info">
+                                    <strong>Current Bid:</strong> ${{ "%.2f"|format(auction.current_bid) }}<br>
+                                    <strong>Total Bids:</strong> {{ auction.bids|length }}<br>
+                                    <strong>End Time:</strong> {{ auction.end_time.strftime('%Y-%m-%d %H:%M') }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="alert alert-warning">
+                                    <strong>Created:</strong> {{ auction.created_at.strftime('%Y-%m-%d %H:%M') }}<br>
+                                    <strong>Likes:</strong> {{ auction.likes|length }}<br>
+                                    <strong>Dislikes:</strong> {{ auction.dislikes|length }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group text-right">
+                            <a href="{{ url_for('admin.manage_auctions') }}" class="btn btn-secondary mr-2">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Auction
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

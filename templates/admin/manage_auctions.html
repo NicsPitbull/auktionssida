@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Auctions - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-gavel"></i> Manage Auctions</h1>
+                <a href="{{ url_for('admin.create_auction') }}" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Create New Auction
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if auctions %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Starting Bid</th>
+                                    <th>Current Bid</th>
+                                    <th>Status</th>
+                                    <th>End Time</th>
+                                    <th>Bids</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for auction in auctions %}
+                                <tr>
+                                    <td>{{ auction.id }}</td>
+                                    <td>
+                                        <a href="{{ url_for('auctions_bp.auction_detail', auction_id=auction.id) }}" target="_blank">
+                                            {{ auction.title }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-secondary">{{ auction.category }}</span>
+                                    </td>
+                                    <td>${{ "%.2f"|format(auction.starting_bid) }}</td>
+                                    <td>
+                                        <strong>${{ "%.2f"|format(auction.current_bid) }}</strong>
+                                    </td>
+                                    <td>
+                                        {% if auction.status == 'active' %}
+                                            <span class="badge badge-success">Active</span>
+                                        {% elif auction.status == 'upcoming' %}
+                                            <span class="badge badge-info">Upcoming</span>
+                                        {% elif auction.status == 'ended' %}
+                                            <span class="badge badge-secondary">Ended</span>
+                                        {% else %}
+                                            <span class="badge badge-warning">{{ auction.status.title() }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>{{ auction.end_time.strftime('%Y-%m-%d %H:%M') }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-primary">{{ auction.bids|length }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a href="{{ url_for('admin.edit_auction', auction_id=auction.id) }}" 
+                                               class="btn btn-outline-primary" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-outline-danger" 
+                                                    onclick="confirmDelete({{ auction.id }}, '{{ auction.title }}')" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <h4><i class="fas fa-info-circle"></i> No Auctions Found</h4>
+                <p>There are no auctions in the system yet.</p>
+                <a href="{{ url_for('admin.create_auction') }}" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Create Your First Auction
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Deletion</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the auction <strong id="auctionTitle"></strong>?</p>
+                <p class="text-danger"><i class="fas fa-exclamation-triangle"></i> This will also delete all bids associated with this auction. This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Delete Auction
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete(auctionId, auctionTitle) {
+    document.getElementById('auctionTitle').textContent = auctionTitle;
+    document.getElementById('deleteForm').action = '/admin/auctions/' + auctionId + '/delete';
+    $('#deleteModal').modal('show');
+}
+</script>
+{% endblock %}

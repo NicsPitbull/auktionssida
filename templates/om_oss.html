@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block titel %}{{ titel }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="display-4 mb-4">Om Oss</h1>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title h3">Välkommen till AuctionHub</h2>
+                    <p class="card-text">
+                        AuctionHub är Sveriges ledande online-auktionsplattform där du kan hitta unika föremål 
+                        och riktiga fynd. Vi har varit verksamma sedan 2020 och har hjälpt tusentals köpare 
+                        och säljare att mötas på en säker och pålitlig plattform.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">Vår Mission</h3>
+                    <p class="card-text">
+                        Vi strävar efter att skapa en transparent och rättvis auktionsmiljö där alla 
+                        deltagare kan känna sig trygga. Vår plattform erbjuder:
+                    </p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><i class="fas fa-check text-success me-2"></i>Säkra betalningar</li>
+                        <li class="list-group-item"><i class="fas fa-check text-success me-2"></i>Verifierade säljare</li>
+                        <li class="list-group-item"><i class="fas fa-check text-success me-2"></i>24/7 kundsupport</li>
+                        <li class="list-group-item"><i class="fas fa-check text-success me-2"></i>Transparent budgivning</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">Kontakta Oss</h3>
+                    <p class="card-text">
+                        Har du frågor eller behöver hjälp? Tväka inte att höra av dig till oss!
+                    </p>
+                    <a href="{{ url_for('pages.kontakt') }}" class="btn btn-primary">
+                        <i class="fas fa-envelope me-2"></i>Kontakta Oss
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

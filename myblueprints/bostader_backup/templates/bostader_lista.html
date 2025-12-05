@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block titel %}{{ titel }}{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Aktuella bostäder</h2>
+
+<!-- Sökfält som både kan posta till servern och används för live filtrering -->
+<form method="get" action="{{ url_for('bostader_bp.sok_bostader') }}" class="row mb-4">
+    <div class="col-md-6">
+        <input 
+            type="text" 
+            id="sokInput"
+            name="q" 
+            class="form-control"
+            placeholder="Sök efter adress, stad, pris, rum eller yta"
+            value="{{ request.args.get('q', '') }}"
+        >
+    </div>
+    <div class="col-md-3 mt-2 mt-md-0">
+        <button type="submit" class="btn btn-primary w-100">Sök</button>
+    </div>
+</form>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="bostadsLista">
+    {% for bostad in bostader %}
+    <div class="col bostad-kort">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title text-primary">{{ bostad.adress }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ bostad.stad }}</h6>
+                <p class="card-text">
+                    <strong>Pris:</strong> {{ bostad.pris }} kr<br>
+                    <strong>Rum:</strong> {{ bostad.rum }} |
+                    <strong>Yta:</strong> {{ bostad.yta }} kvm
+                </p>
+
+                <a href="{{ url_for('bostader_bp.bostad_detalj', bostad_id=bostad.id) }}" 
+                   class="btn btn-outline-primary mt-2">
+                    Läs mer &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if not bostader %}
+    <div class="alert alert-info mt-4" role="alert">
+        Tyvärr finns inga bostäder tillgängliga just nu.
+    </div>
+{% endif %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById("sokInput");
+    const cards = document.querySelectorAll(".bostad-kort");
+
+    if (!input) return;
+
+    input.addEventListener("input", function () {
+        const query = this.value.toLowerCase();
+
+        cards.forEach(function (card) {
+            const text = card.innerText.toLowerCase();
+            card.style.display = text.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>
+
+{% endblock %}

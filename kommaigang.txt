@@ -1,0 +1,129 @@
+
+
+## 1 . Komma Igång-Guide: Flask & VS Code
+
+Detta är den steg-för-steg-guide som är anpassad för att vara nybörjarvänlig.
+
+### Förutsättningar:
+
+Innan du börjar behöver du ha följande installerat på din dator:
+
+1.  **Python** (version 3.x rekommenderas).
+2.  **Visual Studio Code** (VS Code).
+3.  **VS Code-tillägget Python** (Sök efter "Python" av Microsoft i tilläggsvyn i VS Code och installera det).
+
+-----
+
+### Steg-för-Steg Anvisning:
+
+#### Steg 1: Skapa en projektmapp och öppna i VS Code
+
+1.  **Skapa en mapp:** Skapa en ny mapp på din dator, t.ex. `vscodefastighetmaklare`.
+2.  **Öppna mappen i VS Code:**
+      * Öppna VS Code.
+      * Gå till **Arkiv** \> **Öppna mapp...** i menyn.
+      * Välj mappen du just skapade.
+
+#### Steg 2: Skapa en Virtuell Miljö
+
+Det är bäst att isolera ditt projekt med en virtuell miljö (venv) för att förhindra konflikter mellan olika Python-projekt.
+
+1.  **Öppna Terminalen:** I VS Code, gå till **Terminal** \> **Ny Terminal**.
+2.  **Skapa den Virtuella Miljön:** Skriv följande kommando i terminalen:
+    
+    python -m venv venv
+    
+    (Detta skapar en mapp som heter `venv` inuti ditt projekt).
+3.  **Aktivera den Virtuella Miljön:**
+      ***I terminalen skriv: .\venv\Scripts\Activate.ps1
+      
+      ***macOS / Linux skriv: source venv/bin/activate
+      ***Kontrollera:** När den är aktiverad ska du se `(venv)` i början av terminalprompten[cite: 17].
+
+#### Steg 3: Installera Flask
+
+1.  **Installera Flask:** Se till att din virtuella miljö är aktiverad (se `(venv)` i terminalen) och skriv i terminalen:
+    
+    pip install Flask
+    
+    (Nu installeras Flask bara i din virtuella miljö) [cite\_start][cite: 17].
+
+#### Steg 4: Skapa din Flask-app
+
+1.  **Skapa filen:** I VS Code:s Utforskare, klicka på ikonen för **Ny Fil** och döp filen till `flask_app.py`[cite: 18].
+
+2.  **Skriv koden:** Klistra in följande minimala Flask-kod i `flask_app.py`:
+
+    
+    from flask import Flask
+
+    # Skapa en instans av Flask-applikationen
+    app = Flask(__name__)
+
+    # Skapa en "route" (rutt)
+    # Denna funktion körs när någon besöker startsidan ("/")
+    @app.route("/")
+    def hello_world():
+        return "<p>Hej Världen! Min första Flask-app!</p>"
+
+    # Det här kör applikationen om filen startas direkt
+    if __name__ == '__main__':
+        app.run(debug=True) # debug=True gör att servern laddas om automatiskt
+   
+
+#### Steg 5: Kör Flask-applikationen
+
+1.  **Kör filen:** Se till att du fortfarande är i terminalen med den aktiverade virtuella miljön `(venv)`.
+    Kör din app med följande kommando i terminalen:
+
+    ```bash
+    python flask_app.py    
+    ```
+
+    *(Notera: Vi använder `flask_app.py` för att vara konsekventa med Steg 4)*.
+
+2.  **Kontrollera Utdata:** I terminalen bör du se en utdata som liknar denna:
+
+    ```
+     * Serving Flask app 'app'
+     * Debug mode: on
+    ...
+     * Running on http://127.0.0.1:5000 (Press CTRL+C to quit)
+    ```
+
+3.  **Besök Appen:**
+
+      * Håll in `Ctrl` (eller `Cmd` på Mac) och klicka på länken `http://127.0.0.1:5000` i terminalen.
+      * Din webbläsare ska öppnas och visa texten: **"Hej Världen\! Min första Flask-app\!"**
+
+
+
+## 2 . Projektstruktur: Mäklarens Flask-App (Boilerplate)
+
+Detta är en struktur kan använda som mall för medelstora Flask-projekt, organiserad enligt MVC-principerna och Blueprints.
+
+
+/vscodefastighetsmaklare               # Applikationens rotkatalog.
+│
+├── flask_app.py                 # HUVUDFIL - Startar appen
+├── database.py                  # 🗄DATABASKONFIGURATION
+│
+├── models/                      # MODELLER (Databastabeller)
+│   ├── bostad.py               # Bostad-tabellen
+│
+├── dbrepositories/                #  REPOSITORIES (Databasåtkomst)
+│   ├── bostad_repository.py    # CRUD för bostäder
+│
+├── myblueprints/                  # 🗺BLUEPRINTS (URL-hantering)
+│   ├── bostader/
+│   │   ├── __init__.py
+│   │   ├── bostader_routes.py  # URL:er för bostäder, vår kontroller
+│   │   └── templates/          # HTML för bostäder, våra vyer
+│   │       └──bostader_lista.html
+│   │       └──bostad_detalj.html
+│
+└── templates/
+    └── home.html               #start sidan
+    └── base.html               #mallen alla templates/vyer ärver ifrån
+
+
